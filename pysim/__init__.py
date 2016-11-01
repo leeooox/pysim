@@ -7,3 +7,4 @@ from Reg import Reg
 from Vco import Vco
 from Xor import Xor
 from Poly import Poly
+from Amp import Amp

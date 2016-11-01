@@ -4,7 +4,7 @@ Porting from Cppsim
 
 
 
-## the primitive elements
+## The primitive elements
 
 ### Done
 
@@ -24,15 +24,17 @@ Porting from Cppsim
 
 - [x] Xor
 
-      ​
+- [x] Amp
+
+- [x] Poly
 
       ​
 
-### WIP
+      ​
+
+### Work in progress
 
 - [ ] Filter
-
-- [ ] Poly
 
 - [ ] Rand
 

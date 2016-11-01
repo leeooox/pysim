@@ -15,11 +15,16 @@ class Poly:
         self.sample_period = NaN
 
         self.ivar = "!"
-        print len(args)
+
+        self.set(*args,**kwargs)
+
+
+    def set(self,*args,**kwargs):
         if len(args) > 1:
             self.set_expr(*args,**kwargs)
         else:       
             self.set_list(np.array(args[0]))
+
 
     def set_list(self,list_):
         self.ivar = "z"
@@ -40,7 +45,7 @@ class Poly:
         self.num_coeff = len(self.coeff)
 
     def set_expr(self,*args,**kwargs):
-        print "set by expr"
+        #print "set by expr"
         self.ivar = self._get_ivar(args[0],args[1])
 
         para_list = args[1].replace(" ","").strip().split(",")
@@ -48,6 +53,13 @@ class Poly:
         i=2
         for para in para_list:
             para_dict[para] = args[i]
+            if para == "Max":
+                self.max_ = args[i]
+            elif para == "Min":
+                self.min_ = args[i]
+            elif para == "Ts":
+                self.sample_period = args[i]
+
             i+=1
         #print para_dict
 
@@ -66,12 +78,12 @@ class Poly:
             #print coeff,coeff.evalf(subs=para_dict),exp
             coeff_list.append(coeff.evalf(subs=para_dict))
             exp_list.append(exp)
-        self.coeff = np.array(coeff_list)
-        self.exp = np.array(exp_list) 
+        self.coeff = np.array(coeff_list,dtype=np.float)
+        self.exp = np.array(exp_list,dtype=np.float) 
         self.num_coeff = len(self.coeff)
 
-        print self.coeff
-        print self.exp
+        #print self.coeff
+        #print self.exp
 
 
 
@@ -88,13 +100,16 @@ class Poly:
             # exp in [0,1]
             expr_temp = expr.replace("-","+").split("+")
             for expr_slice in expr_temp:
-                if expr_slice[-1].isalpha() and (expr_slice[-1] not in para_single_letter):
+                if expr_slice[-1].isalpha() and \
+                        (expr_slice[-1] not in para_single_letter) and \
+                        (expr_slice not in para_list):
                     ivar_can_list.append(expr_slice[-1])
                 
         else:
             for i in range(len(expr)):
                 if expr[i] == "^" and expr[i-1].isalpha() and (expr[i-1] not in para_single_letter):
                        ivar_can_list.append(expr[i-1])
+
 
 
         if len(ivar_can_list) == 0:
