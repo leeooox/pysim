@@ -6,3 +6,4 @@ from Or import Or
 from Reg import Reg
 from Vco import Vco
 from Xor import Xor
+from Poly import Poly
