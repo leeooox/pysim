@@ -16,14 +16,14 @@ class Divider:
         self._divide_val_flag = 0
 
 
-    def inp(self,_in,divide_value):
+    def inp(self,in_,divide_value):
         if np.abs(np.floor(divide_value)-divide_value) >1e-2:
                 err_msg = "error in Divider.inp:  divide value is far from integer\nin this case, divide value = %5.3f" %divide_val
                 raise Exception(err_msg)
         
         divide_value = int(np.floor(divide_value))
 
-        if self._prev_in == -1.0 and _in != -1.0:
+        if self._prev_in == -1.0 and in_ != -1.0:
             self._cycle_count += 1
 
         if divide_value != self._prev_divide_val:
@@ -51,19 +51,19 @@ class Divider:
                 self._divide_trans_count = 0
                 self._cycle_count = 0
                 self._state = 1
-                self.out = _in
+                self.out = in_
             else:
                 self.out = -1.0
         else:
             if self._cycle_count == self._high_count:
                 self._cycle_count = 0
                 self._state = 0;
-                self.out = -_in
+                self.out = -in_
             else:
                 self.out = 1.0
 
 
 
-        self._prev_in = _in
+        self._prev_in = in_
         return self.out
         

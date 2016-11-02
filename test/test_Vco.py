@@ -6,11 +6,12 @@ from pysim import Vco
 
 
 if __name__ == "__main__":
-    vco = Vco(1e7,1e6,1e-9)
+    Ts = 1e-9
+    vco = Vco("fc + Kv*x","fc,Kv,Ts",10e6,1e6,Ts)
     vout = []
     phase_out = []
 
-    vco2 = Vco(1e7,1e6,1e-9)
+    vco2 = Vco("fc + Kv*x","fc,Kv,Ts",10e6,1e6,Ts)
     vout2 = []
 
     for i in range(10000):
@@ -23,12 +24,14 @@ if __name__ == "__main__":
 
     ax1 = plt.subplot(311)
     plt.plot(vout)
+    plt.ylabel("square")
 
     plt.subplot(312,sharex=ax1,sharey=ax1)
     plt.plot(phase_out)
+    plt.ylabel("sine")
 
     plt.subplot(313,sharex=ax1,sharey=ax1)
     plt.plot(vout2)
+    plt.ylabel("square3")
     plt.ylim([-1.5,1.5])
-    #np.savetxt("pyvout.txt",vout)
     plt.show()

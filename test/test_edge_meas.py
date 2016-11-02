@@ -6,7 +6,7 @@ from pysim import Divider,Vco,EdgeMeasure
 
 if __name__ == "__main__":
     Ts = 1e-9
-    vco = Vco(1e7,1e6,Ts)
+    vco = Vco("fc + Kv*x","fc,Kv,Ts",10e6,1e6,Ts)
     divider = Divider()
 
     vout1 = []

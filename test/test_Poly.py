@@ -46,4 +46,10 @@ def test_case5():
     #print poly1._get_ivar("1+2*s","a,b")
     #print poly1._get_ivar("2*s+2","a,b")
 
+def test_case6():
+    Ts = 1e-9
+    poly1 = Poly("fc + Kv*s","fc,Kv,Ts",10,2,Ts)
+    print poly1.ivar
+
 test_case5()
+test_case6()

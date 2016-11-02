@@ -96,19 +96,23 @@ class Poly:
 
         ivar_can_list = []
 
-        if expr.find("^") == -1 and len(para_single_letter)>0:
-            # exp in [0,1]
-            expr_temp = expr.replace("-","+").split("+")
-            for expr_slice in expr_temp:
-                if expr_slice[-1].isalpha() and \
-                        (expr_slice[-1] not in para_single_letter) and \
-                        (expr_slice not in para_list):
-                    ivar_can_list.append(expr_slice[-1])
-                
+        if expr.find("^") == -1:
+            if len(para_single_letter)>0:
+                # exp in [0,1]
+                expr_temp = expr.replace("-","+").split("+")
+                for expr_slice in expr_temp:
+                    if expr_slice[-1].isalpha() and \
+                            (expr_slice[-1] not in para_single_letter) and \
+                            (expr_slice not in para_list):
+                        ivar_can_list.append(expr_slice[-1])
+            elif expr[-1].isalpha():
+                ivar_can_list.append(expr[-1])
+
+
         else:
             for i in range(len(expr)):
                 if expr[i] == "^" and expr[i-1].isalpha() and (expr[i-1] not in para_single_letter):
-                       ivar_can_list.append(expr[i-1])
+                       ivar_can_list.append(expr[i-1]) 
 
 
 
@@ -126,5 +130,8 @@ class Poly:
 
  
 if __name__ == "__main__":
-     pass
+    Ts = 1e-9
+    poly1 = Poly("fc + Kv*s","fc,Kv,Ts",10,2,Ts)
+
+    print 
 

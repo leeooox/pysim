@@ -1,13 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from Amp import Amp
 
 class Vco:
 
-    def __init__(self,fc,Kv,Ts):
+    def __init__(self,*args,**kwargs):
         # this simplified as 1st order VCO
-        self.fc = fc # Vco center frequency
-        self.Kv = Kv # Kvco value
-        self.sample_period = Ts # this Ts
+        self.Kv_poly = Amp(*args,**kwargs)
         
         self.out = 0.0 # voltage
         self.phase = 0.0 # phase as internal
@@ -16,6 +15,8 @@ class Vco:
         self._prev_phase = 0.0
         self._clk_state = 1 # int
         self._divide_scale = -1.0 # for what?
+
+        self._sample_period = self.Kv_poly.poly_gain.sample_period
         
 
         self._prev_divide_val = 0 # int
@@ -26,27 +27,25 @@ class Vco:
 
 
 
-        if self.sample_period < 1e-30:
+        if self._sample_period < 1e-30:
             print("error in Vco Constructor:  sample_period can't be < 1e-30")
 
-    def inp(self,_in,divide_val=1):
+    def inp(self,in_,divide_val=1):
         if divide_val == 1:
-            return self.inp_nodiv(_in)
+            return self.inp_nodiv(in_)
         else:
             if np.abs(np.floor(divide_val)-divide_val) >1e-2:
-                #print("error in Vco.inp:  divide value is far from integer")
-                #print(" in this case, divide value = %5.3f" %divide_val)
                 err_msg = "error in Vco.inp:  divide value is far from integer\nin this case, divide value = %5.3f" %divide_val
                 raise Exception(err_msg)
 
-            return self.inp_div(_in,divide_val)
+            return self.inp_div(in_,divide_val)
 
 
-    def inp_nodiv(self,_in):
+    def inp_nodiv(self,in_):
         '''@in, is a double value, which is Vco Vctrl voltage value
         '''
 
-        self.phase = self._prev_phase + self.sample_period*2.0*np.pi*(self.fc+self.Kv*_in)
+        self.phase = self._prev_phase + self._sample_period*2.0*np.pi*self.Kv_poly.inp(in_)
         
         if self.phase >= 2*np.pi:
             self.phase -= 2*np.pi
@@ -78,13 +77,13 @@ class Vco:
             print("Warning in Vco.inp:  interpolated output has value beyond -1 to 1 range")
             print("  in this case, out = %5.3f" %self.out);
             print("  probable cause:  input inappropriate");
-            print("  in this case, in = %5.3f\n" %_in);
+            print("  in this case, in = %5.3f\n" %in_);
 
         return self.out 
 
-    def inp_div(self,_in,divide_val):
+    def inp_div(self,in_,divide_val):
         '''a divider
-        @_in, float,voltage waveform input
+        @in_, float,voltage waveform input
         @divide_val, int
         '''
         if divide_val != self._prev_divide_val:
@@ -103,17 +102,17 @@ class Vco:
         if self._divide_scale < 1.0:
             self._divide_scale = float(divide_val)    
 
-        if self.sample_period*(self.fc+self.Kv*_in) > self._divide_scale/2.0:
+        if self._sample_period*self.Kv_poly.inp(in_) > self._divide_scale/2.0:
             if self._divide_val_warning_flag == 0:
                 self._divide_val_warning_flag = 1
                 print("Warning in Vco.inp:  divide_val is too small for the given sample rate!")
-                print("  in this case, divide_val = '%d', and should be >= '%d'" %(divide_val,int(4*sample_period*(self.fc+self.Kv*_in))))
-                printf("  -> setting divide val to '%d' whenever it is too small" %int(4*self.fc+self.Kv*_in))
+                print("  in this case, divide_val = '%d', and should be >= '%d'" %(divide_val,int(4*self._sample_period**self.Kv_poly.inp(in_))))
+                print("  -> setting divide val to '%d' whenever it is too small" %int(4**self.Kv_poly.inp(in_)))
 
-            divide_val = int(4*sample_period*(self.fc+self.Kv*_in))
+            divide_val = int(4*self._sample_period*self.Kv_poly.inp(in_))
 
 
-        self.phase = self._prev_phase + self.sample_period*2.0*np.pi*(self.fc+self.Kv*_in)
+        self.phase = self._prev_phase + self._sample_period*2.0*np.pi*self.Kv_poly.inp(in_)
         
         if self.phase >= 2*np.pi*self._divide_scale:
             self.phase -= 2*np.pi*self._divide_scale
@@ -146,7 +145,7 @@ class Vco:
             self._out_of_range_flag = 1
             print("Warning in Vco.inp:  interpolated output has value beyond -1 to 1 range")
             print("  in this case, out = %5.3f" %self.out);
-            print("  in this case, in = %5.3f, divide value = %d" %(_in,divide_val))
+            print("  in this case, in = %5.3f, divide value = %d" %(in_,divide_val))
             print("  also, make sure divide value is not changing more than once")
             print("  per VCO cycle")
 

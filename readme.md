@@ -40,4 +40,6 @@ Porting from Cppsim
 
 - [ ] SigGen
 
+- [ ] Delay
+
       ​

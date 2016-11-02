@@ -7,7 +7,7 @@ from pysim import Divider,Vco
 
 if __name__ == "__main__":
     Ts = 1e-9
-    vco = Vco(1e7,1e6,Ts)
+    vco = Vco("fc + Kv*x","fc,Kv,Ts",10e6,1e6,Ts)
     div1 = Divider()
 
     vout_vco = []
@@ -23,8 +23,10 @@ if __name__ == "__main__":
 
     ax1 = plt.subplot(211)
     plt.plot(vout_vco)
+    plt.ylabel("vco")
     plt.subplot(212,sharex=ax1,sharey=ax1)
     plt.plot(vout_div)
+    plt.ylabel("divide10")
     plt.ylim([-1.5,1.5])
     plt.show()
 

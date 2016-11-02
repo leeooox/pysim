@@ -14,23 +14,23 @@ class Latch:
         self._reset_transition_flag = 0 
 
     
-    def init(_in):
-        if ((_in != 1.0 and _in != -1.0) and self._out_of_range_flag == 0):
+    def init(in_):
+        if ((in_ != 1.0 and in_ != -1.0) and self._out_of_range_flag == 0):
             self._out_of_range_flag = 1
             print("Warning in Latch.init:  input value is not 1.0 or -1.0")
-            print("  in this case, input value = %5.3f" %_in)
-        self._outp = _in
-        self.out = _in
+            print("  in this case, input value = %5.3f" %in_)
+        self._outp = in_
+        self.out = in_
 
-    def inp(self,_in,clk,_set=None,reset=None):
-        if (not _set) and (not reset):
+    def inp(self,in_,clk,set_=None,reset=None):
+        if (not set_) and (not reset):
             self.out = self._outp
-            self.inp_base(_in,clk)
+            self.inp_base(in_,clk)
         else:
             self.out = self._outp
-            self.inp_base(_in,clk)
+            self.inp_base(in_,clk)
             self._outp = -self._outp
-            self.inp_reset(_set)
+            self.inp_reset(set_)
             self._outp = -self._outp
             self.inp_reset(reset)
 
@@ -62,31 +62,31 @@ class Latch:
         self._prev_reset = reset
 
 
-    def inp_base(self,_in,clk):
-        if (_in > 1.0 or _in < -1.0) and self._out_of_range_flag == 0:
+    def inp_base(self,in_,clk):
+        if (in_ > 1.0 or in_ < -1.0) and self._out_of_range_flag == 0:
             self._out_of_range_flag = 1
             print("Warning in Latch.inp:  in is constrained to be -1.0 <= in <= 1.0")
-            print("  in this case, in = %5.3f" %_in);
+            print("  in this case, in = %5.3f" %in_);
 
         if (clk != self._prev_clk and (self._prev_clk == 1.0 or self._prev_clk == -1.0)): #clk transition
             # follow when clk is low (-1.0), hold when clk is high (+1.0)
             if self._prev_clk == 1.0: # transition from hold to follow
-                self._outp = self._outp*clk if (_in !=self._outp) else self._outp 
+                self._outp = self._outp*clk if (in_ !=self._outp) else self._outp 
             elif self._prev_clk == -1.0: # transition from follow to hold
-                if _in == 1.0 and self._outp > 0.0:
+                if in_ == 1.0 and self._outp > 0.0:
 	                self._outp = 1.0
-                elif _in == -1.0 and  self._outp <= 0.0:
+                elif in_ == -1.0 and  self._outp <= 0.0:
 	                self._outp = -1.0
                 else:
                     if self._outp <= 0.0: # in is transitioning from -1 to 1
-                        self._outp = 1.0 if (clk<_in) else -1.0
+                        self._outp = 1.0 if (clk<in_) else -1.0
                     else: # in is transitioning from 1 to -1
-	                    self._outp = -1.0 if (clk<-_in)  else 1.0
+	                    self._outp = -1.0 if (clk<-in_)  else 1.0
 
         elif clk == -1.0 or clk  == 1.0 :
             # follow when clk is low (-1.0), hold when clk is high (+1.0)
             if (clk == -1.0): #follow
-                self._outp = _in
+                self._outp = in_
             else: # hold
 	            self._outp = 1.0 if (self._outp > 0.0) else -1.0
         elif self._clk_warning_flag == 0:
