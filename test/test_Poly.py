@@ -51,5 +51,15 @@ def test_case6():
     poly1 = Poly("fc + Kv*s","fc,Kv,Ts",10,2,Ts)
     print poly1.ivar
 
-test_case5()
-test_case6()
+def test_case7():
+    poly1 = Poly("1+3")
+    print poly1.coeff
+    print poly1.exp
+
+def test_case8():
+    poly1 = Poly("Fc+1","Fc",1e3)
+    print poly1.coeff
+    print poly1.exp
+    print poly1.ivar
+
+test_case8()

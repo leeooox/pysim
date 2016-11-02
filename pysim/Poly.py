@@ -22,6 +22,9 @@ class Poly:
     def set(self,*args,**kwargs):
         if len(args) > 1:
             self.set_expr(*args,**kwargs)
+        elif len(args)==1 and isinstance(args[0],str):
+            self.set_expr_no_vars(args[0])
+
         else:       
             self.set_list(np.array(args[0]))
 
@@ -44,8 +47,14 @@ class Poly:
         self.exp = -np.where(np.abs(coeff_in)>my_max)[0]
         self.num_coeff = len(self.coeff)
 
+    def set_expr_no_vars(self,expr):
+            self.coeff = np.array([eval(expr)],dtype=np.float)
+            self.exp = np.zeros(1)
+            self.num_coeff = 1  
+
     def set_expr(self,*args,**kwargs):
         #print "set by expr"
+
         self.ivar = self._get_ivar(args[0],args[1])
 
         para_list = args[1].replace(" ","").strip().split(",")
@@ -70,14 +79,21 @@ class Poly:
 
 
         expr = sym.Poly(expr_raw)
+        #print "para_dict",para_dict
 
         coeff_list = []
         exp_list = []
         for term in expr.as_expr().as_ordered_terms(order="rev-lex"):
             coeff,exp =  term.as_coeff_exponent(s)
-            #print coeff,coeff.evalf(subs=para_dict),exp
-            coeff_list.append(coeff.evalf(subs=para_dict))
-            exp_list.append(exp)
+            #print term,coeff,coeff.evalf(subs=para_dict),exp
+            if exp in exp_list: # if the exp already existing
+                idx = exp_list.index(exp)
+                coeff_list[idx] += coeff.evalf(subs=para_dict)
+            else:
+                coeff_list.append(coeff.evalf(subs=para_dict))
+                exp_list.append(exp)
+
+
         self.coeff = np.array(coeff_list,dtype=np.float)
         self.exp = np.array(exp_list,dtype=np.float) 
         self.num_coeff = len(self.coeff)
