@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from Amp import Amp
+from Const import NaN
 
 class Vco:
 
@@ -24,11 +25,49 @@ class Vco:
         self._trans_warning_flag = 0 #
         self._divide_val_warning_flag = 0 #
         self._out_of_range_flag = 0 #
+        
+        if self._sample_period == NaN:
+            err_msg = "Error in Vco Constructor:  sample_period has not been set\n"
+            err_msg += "   in variable list, you must specify 'Ts'\n"
+            raise Exception(err_msg)
 
 
+        elif self._sample_period < 1e-30:
+            err_msg = "error in Vco Constructor:  sample_period can't be < 1e-30\n"
+            err_msg += "  in this case, sample_period = %5.3e\n" %self._sample_period
+            raise Exception(err_msg)
 
-        if self._sample_period < 1e-30:
-            print("error in Vco Constructor:  sample_period can't be < 1e-30")
+
+    def set(self,*args,**kwargs):
+        self.Kv_poly.set(*args,**kwargs)
+        self._sample_period = self.Kv_poly.poly_gain.sample_period
+        if self._sample_period == NaN:
+            err_msg = "Error in Vco Constructor:  sample_period has not been set\n"
+            err_msg += "   in variable list, you must specify 'Ts'\n"
+            raise Exception(err_msg)
+
+
+        elif self._sample_period < 1e-30:
+            err_msg = "error in Vco Constructor:  sample_period can't be < 1e-30\n"
+            err_msg += "  in this case, sample_period = %5.3e\n" %self._sample_period
+            raise Exception(err_msg)
+
+    def set_phase(self,in_):
+        if in_ < 0 :
+            while in_<0:
+                in_ += 1.0
+        elif in_ >= 0:
+            while in_ >=0:
+                in_ -= 1.0
+        if in_>=0 and in_<0.5:
+            self._clk_state = 1
+            self.out = 1
+        else:
+            self._clk_state = 0
+            self.out = -1
+        self.phase = in_*2*np.pi
+        self._prev_phase = in_*2*np.pi
+
 
     def inp(self,in_,divide_val=1):
         if divide_val == 1:
@@ -153,5 +192,4 @@ class Vco:
         return self.out 
 
 
-
-
+ 

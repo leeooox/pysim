@@ -1,8 +1,8 @@
 from __future__ import division
 import sympy as sym
 import numpy as np
+from Const import NaN
 
-NaN = 1.2345e307
 
 class Poly:
     def __init__(self,*args,**kwargs):
@@ -133,5 +133,5 @@ if __name__ == "__main__":
     Ts = 1e-9
     poly1 = Poly("fc + Kv*s","fc,Kv,Ts",10,2,Ts)
 
-    print 
+    print NaN
 

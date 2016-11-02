@@ -6,7 +6,7 @@ class Amp:
         self.out = 0.0
         self.poly_gain = Poly(*args,**kwargs)
 
-    def set(*args,**kwargs):
+    def set(self,*args,**kwargs):
         self.poly_gain.set(*args,**kwargs)
 
     def inp(self,in_):
