@@ -98,4 +98,32 @@ def test_case6():
     sample_per = 1e-6
     double_integ = Filter("K","s^2","K,Ts",1e5,sample_per)   
     diff =Filter("s","1","Ts",sample_per)
-test_case4()
+
+def test_case7():
+    # a RC filter
+    Ts = 1.0/4e3
+    r = 10e3
+    c = 100e-6
+
+    RC_filter = Filter("1","1+r*c*s","r,c,Ts",r,c,Ts)
+
+    vin = 0.0
+    v1 = []
+    v2 = []
+    for i in range(-4000,20000):
+        if i>0:
+            vin =10.0
+        RC_filter.inp(vin)
+        v1.append(vin)
+        v2.append(RC_filter.out)
+
+    #t = np.arange
+    t = np.arange(-4000,20000)*Ts
+    plt.plot(t,v1,label="Va")
+    plt.plot(t,v2,label="Vb")
+    plt.grid()
+    plt.ylim([-1,11])
+    plt.legend(loc="best")
+    plt.show()
+
+test_case7()

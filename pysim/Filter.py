@@ -22,6 +22,9 @@ class Filter:
         self._max_out = 0
         self._min_out = 0
 
+        self.set(*args,**kwargs)
+
+    def set(self,*args,**kwargs):
         #init poly
         arg_num = list(args)
         arg_den = list(args)
