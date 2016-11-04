@@ -49,17 +49,65 @@ def test_case5():
 def test_case6():
     Ts = 1e-9
     poly1 = Poly("fc + Kv*s","fc,Kv,Ts",10,2,Ts)
+    print poly1.coeff
+    print poly1.exp
     print poly1.ivar
 
 def test_case7():
+    print "case7"
     poly1 = Poly("1+3")
     print poly1.coeff
     print poly1.exp
 
 def test_case8():
+    print "case8"
     poly1 = Poly("Fc+1","Fc",1e3)
     print poly1.coeff
     print poly1.exp
     print poly1.ivar
 
+def test_case9():
+    print "case9"
+    poly1 = Poly("1-z^-1")
+
+    print poly1.coeff
+    print poly1.exp
+    print poly1.ivar
+
+def test_case10():
+    print "case10"
+    poly1 = Poly("1")
+
+    print poly1.coeff
+    print poly1.exp
+    print poly1.ivar
+
+def test_case11():
+    print "case11"
+    poly1 = Poly("1+2","Ts",1e-6) 
+
+    print poly1.coeff
+    print poly1.exp
+    print poly1.ivar
+def test_case12():
+    print "case12"
+    poly1 = Poly("s^2","K,Ts",1e5,1e-6) 
+
+    print poly1.coeff
+    print poly1.exp
+    print poly1.ivar
+
+def test_case13():
+    poly1 = Poly("K","K,Ts",1e5,1e-6) 
+    print poly1._get_ivar("K","K,Ts")
+    print poly1.coeff
+    print poly1.exp
+    print poly1.ivar
+
+test_case7()
 test_case8()
+test_case9()
+test_case10()
+test_case11()
+test_case12()
+test_case13()

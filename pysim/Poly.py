@@ -20,13 +20,54 @@ class Poly:
 
 
     def set(self,*args,**kwargs):
+        
         if len(args) > 1:
-            self.set_expr(*args,**kwargs)
-        elif len(args)==1 and isinstance(args[0],str):
-            self.set_expr_no_vars(args[0])
+            expr = args[0]
+            para_list = filter(lambda x:x,args[1].replace(" ","").strip().split(","))
 
-        else:       
+            para_dict= {}
+            i=2
+            for para in para_list:
+                para_dict[para] = args[i]
+                if para == "Max":
+                    self.max_ = args[i]
+                elif para == "Min":
+                    self.min_ = args[i]
+                elif para == "Ts":
+                    self.sample_period = args[i]
+
+                i+=1
+
+            self.ivar = self._get_ivar(expr,args[1])
+
+            find_para_in_expr_flag = False
+            for para in para_list:
+                if expr.find(para) != -1:
+                    find_para_in_expr_flag = True
+
+            
+            if self.ivar != "!":
+                self.set_expr(expr,para_dict)
+            elif not para_list:
+                self.set_expr_no_vars(expr)
+            elif not find_para_in_expr_flag:
+                self.set_expr_no_vars(expr)
+            else:
+                self.set_expr(expr,para_dict)
+
+        elif (len(args)==1 and isinstance(args[0],str)):
+            expr = args[0]
+            para_dict = {}
+            self.ivar = self._get_ivar(expr)
+
+            if self.ivar != "!":
+                self.set_expr(expr,para_dict)
+            else:
+                self.set_expr_no_vars(expr)
+
+        else:
             self.set_list(np.array(args[0]))
+
 
 
     def set_list(self,list_):
@@ -52,31 +93,12 @@ class Poly:
             self.exp = np.zeros(1)
             self.num_coeff = 1  
 
-    def set_expr(self,*args,**kwargs):
+    def set_expr(self,expr,para_dict):
         #print "set by expr"
 
-        self.ivar = self._get_ivar(args[0],args[1])
-
-        para_list = args[1].replace(" ","").strip().split(",")
-        para_dict= {}
-        i=2
-        for para in para_list:
-            para_dict[para] = args[i]
-            if para == "Max":
-                self.max_ = args[i]
-            elif para == "Min":
-                self.min_ = args[i]
-            elif para == "Ts":
-                self.sample_period = args[i]
-
-            i+=1
-        #print para_dict
-
-
-        expr_raw = args[0].replace("^","**")
+        expr_raw = expr.replace("^","**")
 
         s = sym.symbols(self.ivar)
-
 
         expr = sym.Poly(expr_raw)
         #print "para_dict",para_dict
@@ -103,10 +125,9 @@ class Poly:
 
 
 
-    def _get_ivar(self,expr,para):
-        para_list = para.replace(" ","").strip().split(",")
+    def _get_ivar(self,expr,para=""):
+        para_list = filter(lambda x:x,para.replace(" ","").strip().split(","))
         para_single_letter = filter(lambda x:len(x)==1,para_list)
-
 
         expr = expr.replace(" ","").strip()
 
