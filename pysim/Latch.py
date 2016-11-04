@@ -14,7 +14,7 @@ class Latch:
         self._reset_transition_flag = 0 
 
     
-    def init(in_):
+    def init(self,in_):
         if ((in_ != 1.0 and in_ != -1.0) and self._out_of_range_flag == 0):
             self._out_of_range_flag = 1
             print("Warning in Latch.init:  input value is not 1.0 or -1.0")

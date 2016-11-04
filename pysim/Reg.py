@@ -10,7 +10,7 @@ class Reg:
         self.lat1 = Latch()
         self.lat2 = Latch()
 
-    def init(in_):
+    def init(self,in_):
         if ((in_ != 1.0 and in_ != -1.0) and out_of_range_flag == 0):
             self._out_of_range_flag = 1
             print("Warning in Reg.init:  input value is not 1.0 or -1.0")
