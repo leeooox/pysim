@@ -1,6 +1,6 @@
 ## Python Behavior Simulation
 
-Porting from Cppsim
+Porting from Cppsim, this is a very experimental code now, much of work is in progress
 
 
 
@@ -26,17 +26,17 @@ Porting from Cppsim
 
 - [x] Amp
 
-- [x] Poly
+- [x] Poly (to be improved for omitting * expression)
+
+- [x] Filter
+
+- [x] Rand
 
       ​
 
       ​
 
 ### Work in progress
-
-- [ ] Filter
-
-- [ ] Rand
 
 - [ ] SigGen
 
