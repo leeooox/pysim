@@ -32,16 +32,24 @@ Porting from Cppsim, this is a very experimental code now, much of work is in pr
 
 - [x] Rand
 
-      ​
+- [x] SigGen (with a different random sequence that C++)
 
       ​
 
 ### Work in progress
 
-- [ ] SigGen
-
 - [ ] Delay
 
 - [ ] Probe
 
+- [ ] Probe64
+
+- [ ] EdgeDetect
+
       ​
+
+## The system simulation
+
+- [x] BBCDR
+- [ ] Linear CDR
+- [ ] ​

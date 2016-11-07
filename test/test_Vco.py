@@ -56,4 +56,4 @@ def test_case5():
 
 
 if __name__ == "__main__":
-    test_case5()
+    test_case1()

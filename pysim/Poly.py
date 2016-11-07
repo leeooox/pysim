@@ -89,9 +89,10 @@ class Poly:
         self.num_coeff = len(self.coeff)
 
     def set_expr_no_vars(self,expr):
-            self.coeff = np.array([eval(expr)],dtype=np.float)
-            self.exp = np.zeros(1)
-            self.num_coeff = 1  
+        pi = np.pi
+        self.coeff = np.array([eval(expr)],dtype=np.float)
+        self.exp = np.zeros(1)
+        self.num_coeff = 1  
 
     def set_expr(self,expr,para_dict):
         #print "set by expr"
